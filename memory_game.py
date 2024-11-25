@@ -221,7 +221,6 @@ def prepare_cards(cards_count, cards_list):
     return cards_list
 
 def end_game():
-    print('end')
     t = turtle.Turtle()
     t.up()
     t.hideturtle()
