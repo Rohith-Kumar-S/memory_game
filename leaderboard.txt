@@ -1,4 +1,5 @@
 NAME	SCORE	CLICKS
 rohith#0	100	2
+rohith#3	100	2
 rohith#1	50	8
 roh#2	33	12

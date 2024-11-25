@@ -171,6 +171,15 @@ def load_cards(screen):
 
 def initialize_card_handler():
     return {'active_card_index' : None,'click_count' : 0, 'right_choices' : 0, 'cards': [] }
+    
+def get_game_title(turtle_):
+    turtle_.hideturtle()
+    turtle_.goto(105,-20)
+    turtle_.color('white')
+    turtle_.write('MEMORY\n        GAME', move=False, align='right', font=('Bauhaus 93', 48, 'bold'))
+    turtle_.goto(-45,60)
+    turtle_.color('red')
+
 
 def start_game(cards_list, players_dict, score_turtles, column_value, screen):
     card_handler_dict = initialize_card_handler()
@@ -202,12 +211,13 @@ def start_game(cards_list, players_dict, score_turtles, column_value, screen):
         quit_button.hideturtle()
         time.sleep(2)
         quit_message.hideturtle()
+        get_game_title(menu)
         menu.showturtle()
         card_handler_dict = initialize_card_handler()
     
     def handle_start_button(x,y):
         menu.hideturtle()
-        start(screen)
+        start(screen, menu)
         
     menu.onclick(handle_start_button)    
     quit_button.onclick(handle_quit_button)
@@ -290,7 +300,7 @@ def draw_outlines():
     score_border.forward(505)
     score_border.end_fill()
     
-def start(screen):
+def start(screen, menu):
     player_name = None
     cards_count = 0
     cards_list = load_cards(screen)
@@ -320,6 +330,7 @@ def start(screen):
                 cards_count = int(cards_count) - 1
                 
             if int(cards_count) % 2 == 0 and len(cards_list)*2 >= int(cards_count):
+                menu.clear()
                 players_dict = {}
                 get_leaderboard_details(players_dict)
                 players_dict[f'{player_name}#{len(players_dict.keys())}'] = {}
@@ -331,16 +342,7 @@ def start(screen):
                 cards_count = 0
                 
 def load_quit_button():
-    quit_button = turtle.Turtle()
-    quit_button.hideturtle()
-    quit_button.penup()
-    quit_button.up()
-    quit_button.goto(250,-135)
-    quit_button.pendown()
-    quit_button.showturtle()
-    quit_button.shape(os.path.join(os.path.join(os.getcwd(), 'assets'),
-                                  'quitbutton.gif'))
-    return quit_button
+    return load_custom_turtle('quitbutton.gif',goto=(250,-135), showturtle=True)
     
 def load_custom_turtle(asset_name, goto, showturtle=False):
     turtle_ = turtle.Turtle()
@@ -362,10 +364,8 @@ def start_button():
     menu = turtle.Turtle("triangle")
     menu.hideturtle()
     menu.penup()
-    menu.color('white')
-    menu.turtlesize(6)
     menu.goto(-45,60)
-    # menu.write('Play', move=False, align='center', font=('Arial', 24, 'bold'))
+    menu.turtlesize(4)
     return menu
 
 def main():
@@ -381,13 +381,14 @@ def main():
     
     
     menu = start_button()
+    get_game_title(menu)
     quit_button = load_quit_button()
     menu.showturtle()
     def handle_start_button(x,y):
         nonlocal screen
         nonlocal menu
         menu.hideturtle()
-        start(screen)
+        start(screen,menu)
     
     def handle_quit_button(x,y):
         nonlocal screen
