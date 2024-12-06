@@ -1,3 +1,11 @@
 NAME	SCORE	CLICKS
 2#0	100	2
 rohith#1	100	2
+sefsd#3	100	2
+sazcXZs#5	100	2
+sdfsdf#7	100	2
+yhb#9	100	2
+dfgb#10	100	2
+2#10	100	2
+7#10	100	4
+66#10	75	8

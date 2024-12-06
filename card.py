@@ -1,13 +1,15 @@
 import turtle, os 
 
 class Card:
-    def __init__(self, index, name):
+    def __init__(self, index, name, card_back=''):
         self.index = index
         self.turtle = turtle.Turtle()
         self.turtle.up()
+        self.turtle.turtlesize(4)
         self.turtle.speed(5)
         self.turtle.shape(os.path.join(os.path.join(os.getcwd(), 'assets'),
-                                       'card_back.gif'))
+                                       'card_back.gif')  if not card_back else\
+                                           card_back)
         if index < 4:
             self.turtle.setposition(-200 + 100*index, 200)
         elif index >= 4 and index < 8:
