@@ -5,7 +5,6 @@ class Card:
         self.index = index
         self.turtle = turtle.Turtle()
         self.turtle.up()
-        self.turtle.turtlesize(4)
         self.turtle.speed(5)
         self.turtle.shape(os.path.join(os.path.join(os.getcwd(), 'assets'),
                                        'card_back.gif')  if not card_back else\
@@ -29,4 +28,3 @@ class Card:
     
     def hide_card(self):
         self.turtle.hideturtle()
-        
