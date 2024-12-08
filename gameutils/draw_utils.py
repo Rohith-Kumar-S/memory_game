@@ -9,6 +9,7 @@ funtions that builds the user interface
 import turtle
 import os
 from . import card_utils
+import time
 
 def draw_cards_block():
     """draw_cards_block: draws the game design
@@ -54,6 +55,19 @@ def draw_score_board_block():
     score_border.right(90)
     score_border.forward(505)
     score_border.end_fill()
+    
+def load_developer_signature():
+    """load_developer_signature: loads a text with developer's name
+    """
+    
+    time.sleep(1)
+    info_text_1 = customize_turtle_text(
+        'Developed by', 12, (-100, 65), font = 'Century Gothic')
+    info_text_2 = customize_turtle_text(
+        'Rohith Kumar S', 15, (-115, 25), font = 'Century Gothic')
+    time.sleep(3)
+    info_text_1.clear()
+    info_text_2.clear()
             
 def draw_outlines():
     """draw_outlines: calls the draw game design functions
@@ -177,13 +191,13 @@ def load_player_action_details(card_handler_dict, action_turtles,
         update_action_turtles(action_turtles,card_handler_dict)         
     else:
         guesses_key = customize_turtle_text(
-            'GUESSES', size=12, goto=(190, column_value-50))       
+            'Guesses', size=12, goto=(190, column_value-50))       
         action_turtles.append(guesses_key)
         guesses_value = customize_turtle_text(str(card_handler_dict[
             'click_count']//2), size=9, goto=(190, column_value-70))
         action_turtles.append(guesses_value)
         matches_key = customize_turtle_text(
-            'MATCHES', size=12, goto=(190, column_value-100))
+            'Matches', size=12, goto=(190, column_value-100))
         action_turtles.append(matches_key)
         matches_value = customize_turtle_text(str(card_handler_dict[
             'right_choices']), size=9, goto=(190, column_value-120))
@@ -204,7 +218,7 @@ def load_score_board(players_dict, score_turtles):
     if score_turtles:
         card_utils.reset_turtle(score_turtles)
 
-    score_card_title = customize_turtle_text('SCOREBOARD', size=12, 
+    score_card_title = customize_turtle_text('Score board', size=12, 
                                                         goto=(190, 260))
     score_turtles.append(score_card_title)
     column_value = 240
@@ -218,7 +232,7 @@ def load_score_board(players_dict, score_turtles):
             score_turtles.append(text)
     return score_turtles, column_value
     
-def customize_turtle_text(text, size, goto):
+def customize_turtle_text(text, size, goto, font = 'Arial'):
     """customize_turtle_text: customizes the positon and other properties of a
     turtle text
 
@@ -238,7 +252,7 @@ def customize_turtle_text(text, size, goto):
     t.penup()
     t.color('white')
     t.goto(goto)
-    t.write(text, move=False, align='left', font=('Arial', size, 'bold'))
+    t.write(text, move=False, align='left', font=(font, size, 'bold'))
     
     return t
     

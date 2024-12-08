@@ -27,27 +27,30 @@ def end_game(cards, card_handler_dict, players_dict, score_turtles, end_popup):
         score_turtles (_type_): turtle list which display the score board
         end_popup (_type_): a turtle instance which represents the wining popup
     """
-    
-    players_dict[list(players_dict.keys())[-1]]["score"] = \
-        card_utils.calculate_score(len(cards), card_handler_dict['click_count'
-                                                                 ])
-    players_dict[list(players_dict.keys())[-1]]["clicks"] = \
-        card_handler_dict['click_count']
-    player_key = list(players_dict.keys())[-1]
-    players_dict = dict(
-        sorted(players_dict.items(), key=lambda item: item[1]['clicks']))
-    
-    if len(players_dict) == 11:
-        if list(players_dict.keys())[-1] == player_key:
-            end_popup.showturtle()
-            return
-        else:
-            key_to_be_deleted = list(players_dict.keys())[-1]
-            del players_dict[key_to_be_deleted]
-            
-    draw_utils.load_score_board(players_dict, score_turtles)
-    data_management_utils.save_leaderboard_details(players_dict)
-    end_popup.showturtle()
+    try:
+        players_dict[list(players_dict.keys())[-1]]["score"] = \
+            card_utils.calculate_score(len(cards), card_handler_dict['click_count'
+                                                                    ])
+        players_dict[list(players_dict.keys())[-1]]["clicks"] = \
+            card_handler_dict['click_count']
+        player_key = list(players_dict.keys())[-1]
+        
+        # sort based on score
+        players_dict = data_management_utils.sort_based_on_score(players_dict)
+        
+        if len(players_dict) == 11:
+            if list(players_dict.keys())[-1] == player_key:
+                end_popup.showturtle()
+                return
+            else:
+                key_to_be_deleted = list(players_dict.keys())[-1]
+                del players_dict[key_to_be_deleted]
+                
+        draw_utils.load_score_board(players_dict, score_turtles)
+        data_management_utils.save_leaderboard_details(players_dict)
+        end_popup.showturtle()
+    except Exception:
+        print('error: something went wrong in process_card_actions()')  
     
 def process_card_actions(cards, active_card_index, current_card_index, 
                          card_handler_dict, action_turtles, column_value):
@@ -66,21 +69,23 @@ def process_card_actions(cards, active_card_index, current_card_index,
         column_value (_type_): used for the position adjustment of the score
                                details
     """
-    
-    if card_utils.compare_cards(
-        cards[active_card_index], cards[current_card_index]):
-        time.sleep(1)
-        cards[active_card_index].hide_card()
-        cards[current_card_index].hide_card()
-        card_handler_dict['right_choices'] += 1
-    else:
-        time.sleep(1)
-        cards[active_card_index].reset_card()
-        cards[current_card_index].reset_card()
-        
-    card_handler_dict['active_card_index'] = None
-    draw_utils.load_player_action_details(
-        card_handler_dict, action_turtles, column_value)    
+    try:
+        if card_utils.compare_cards(
+            cards[active_card_index], cards[current_card_index]):
+            time.sleep(1)
+            cards[active_card_index].hide_card()
+            cards[current_card_index].hide_card()
+            card_handler_dict['right_choices'] += 1
+        else:
+            time.sleep(1)
+            cards[active_card_index].reset_card()
+            cards[current_card_index].reset_card()
+            
+        card_handler_dict['active_card_index'] = None
+        draw_utils.load_player_action_details(
+            card_handler_dict, action_turtles, column_value)  
+    except Exception:
+        print('error: something went wrong in process_card_actions()')  
 
 def card_clicked(card_handler_dict, players_dict, current_card_index, 
                    score_turtles, action_turtles, column_value, end_popup):
@@ -100,28 +105,30 @@ def card_clicked(card_handler_dict, players_dict, current_card_index,
                                details
         end_popup (_type_): a turtle instance which represents the wining popup
     """
-    
-    cards = card_handler_dict['cards']
-    active_card_index = card_handler_dict['active_card_index']
-    card_handler_dict['click_count'] += 1
-    
-    # restrict clicks to 2 per check
-    if card_utils.three_cards_clicked_at_once(
-        card_handler_dict, active_card_index):
-        card_handler_dict['click_count'] -= 1
-        return
+    try:
+        cards = card_handler_dict['cards']
+        active_card_index = card_handler_dict['active_card_index']
+        card_handler_dict['click_count'] += 1
         
-    cards[current_card_index].flip_card()
-    
-    if active_card_index != None:
-        process_card_actions(cards, active_card_index, current_card_index, 
-                         card_handler_dict, action_turtles, column_value)
-    else:
-        card_handler_dict['active_card_index'] = current_card_index
+        # restrict clicks to 2 per check
+        if card_utils.three_cards_clicked_at_once(
+            card_handler_dict, active_card_index):
+            card_handler_dict['click_count'] -= 1
+            return
+            
+        cards[current_card_index].flip_card()
         
-    if card_handler_dict['right_choices'] == len(cards)//2:
-        end_game(cards, card_handler_dict, players_dict, score_turtles, 
-                 end_popup)
+        if active_card_index != None:
+            process_card_actions(cards, active_card_index, current_card_index, 
+                            card_handler_dict, action_turtles, column_value)
+        else:
+            card_handler_dict['active_card_index'] = current_card_index
+            
+        if card_handler_dict['right_choices'] == len(cards)//2:
+            end_game(cards, card_handler_dict, players_dict, score_turtles, 
+                    end_popup)
+    except Exception:
+        print('error: something went wrong in card_clicked()')
         
 def draw_and_play_cards(cards_list, card_handler_dict, players_dict, 
                         score_turtles, action_turtles, column_value, 
@@ -146,10 +153,10 @@ def draw_and_play_cards(cards_list, card_handler_dict, players_dict,
             card_handler_dict['cards'].append(Card(index=i, name=path))
             card_handler_dict['cards'][i].turtle.onclick(
                 lambda x , y, turtle_index = i : card_clicked(
-                    card_handler_dict, players_dict, turtle_index, score_turtles, 
-                    action_turtles, column_value, end_popup))
+                    card_handler_dict, players_dict, turtle_index, 
+                    score_turtles, action_turtles, column_value, end_popup))
     except Exception:
-        print('something went wrong in draw_and_play_cards')
+        print('error: something went wrong in draw_and_play_cards()')
 
 def handle_in_game_quit_button(end_popup, quit_message, quit_button, 
                                score_turtles, action_turtles, start_btn, 
@@ -171,21 +178,23 @@ def handle_in_game_quit_button(end_popup, quit_message, quit_button,
                                button
         card_handler_dict (_type_): main gameplay details dictionary
     """
-    
-    end_popup.hideturtle()
-    quit_message.showturtle()
-    
-    for card in card_handler_dict['cards']:
-        card.turtle.hideturtle()
+    try:
+        end_popup.hideturtle()
+        quit_message.showturtle()
         
-    card_utils.reset_turtle(score_turtles)
-    card_utils.reset_turtle(action_turtles)
-    quit_button.hideturtle()
-    time.sleep(2)
-    quit_message.hideturtle()
-    draw_utils.get_game_title(start_btn)
-    start_btn.showturtle()
-    card_handler_dict = card_utils.initialize_card_handler()
+        for card in card_handler_dict['cards']:
+            card.turtle.hideturtle()
+            
+        card_utils.reset_turtle(score_turtles)
+        card_utils.reset_turtle(action_turtles)
+        quit_button.hideturtle()
+        time.sleep(2)
+        quit_message.hideturtle()
+        draw_utils.get_game_title(start_btn)
+        start_btn.showturtle()
+        card_handler_dict = card_utils.initialize_card_handler()
+    except Exception:
+        print('error: something went wrong in handle_in_game_quit_button()')
 
 def start_game(cards_list, players_dict, score_turtles, column_value):
     """start_game: starts the game after a card deck was chosen and after the 
@@ -231,7 +240,7 @@ def start_game(cards_list, players_dict, score_turtles, column_value):
         start_btn.onclick(handle_start_button)    
         quit_button.onclick(handle_quit_button)
     except Exception:
-        print('start_game: something went wrong')
+        print('error: something went wrong in start_game()')
     
 def process_cards_and_start_game(cards_list, cards_count, player_name):
     """process_cards_and_start_game: Performs checks on the card count entered 
@@ -248,56 +257,64 @@ def process_cards_and_start_game(cards_list, cards_count, player_name):
         the user to enter the count again
     """
     
-    if card_utils.is_card_count_odd(cards_count):
-        warning_popup = draw_utils.load_pop_up('card_warning.gif')
-        warning_popup.showturtle()
-        time.sleep(3)
-        warning_popup.hideturtle()
-        cards_count = int(cards_count) - 1
-        
-    if card_utils.is_card_count_valid(cards_count, cards_list):
-        players_dict, cards_list, score_turtles, column_value = \
-        data_management_utils.process_game_parameters(
-            player_name, cards_list, cards_count)
-        start_game(cards_list, players_dict, score_turtles, column_value)
-    else:
-        cards_count = 0
-        
-    return cards_count
+    try:
+        if card_utils.is_card_count_odd(cards_count):
+            warning_popup = draw_utils.load_pop_up('card_warning.gif')
+            warning_popup.showturtle()
+            time.sleep(3)
+            warning_popup.hideturtle()
+            cards_count = int(cards_count) - 1
+            
+        if card_utils.is_card_count_valid(cards_count, cards_list):
+            players_dict, cards_list, score_turtles, column_value = \
+            data_management_utils.process_game_parameters(
+                player_name, cards_list, cards_count)
+            start_game(cards_list, players_dict, score_turtles, column_value)
+        else:
+            cards_count = 0
+            
+        return cards_count
+    except Exception:
+        print('error: something went wrong in process_cards_and_start_game()'
+              )
     
 def request_details_and_start_game():
     """request_details_and_start_game: Requests the player's details and starts
     the game. Continues prompting the user for input in case of invalid entries
     """
     
-    screen = turtle.Screen()
-    player_name = None
-    cards_count = 0
-    cards_list = data_management_utils.load_cards(screen)
-    
-    while player_name == None:
-        player_name = screen.textinput("Welcome to the Memory Game!", \
-"Enter your name")
-        if player_name is None:
-            return False
-        elif player_name.strip() == '':
-            continue
+    try:
+        screen = turtle.Screen()
+        player_name = None
+        cards_count = 0
+        cards_list = data_management_utils.load_cards(screen)
         
-        while cards_count == 0:
-            cards_count = screen.textinput(f"Hello {player_name}", "\n\
-Enter # of cards to play (8, 10, 12)")
-            if cards_count is None:
-                cards_count = 0
-                player_name = None
-                break
-            elif cards_count.strip() == '' or not cards_count.isdigit():
-                cards_count = 0
+        while player_name == None:
+            player_name = screen.textinput("Welcome to the Memory Game!", \
+"Enter your name")
+            if player_name is None:
+                return False
+            elif player_name.strip() == '':
                 continue
-            cards_count = process_cards_and_start_game(cards_list, cards_count,
-                                                       player_name)
-    return True
+            
+            while cards_count == 0:
+                cards_count = screen.textinput(f"Hello {player_name}", "\n\
+Enter # of cards to play (8, 10, 12)")
+                if cards_count is None:
+                    cards_count = 0
+                    player_name = None
+                    break
+                elif cards_count.strip() == '' or not cards_count.isdigit():
+                    cards_count = 0
+                    continue
+                cards_count = process_cards_and_start_game(cards_list, cards_count,
+                                                        player_name)
+        return True
+    except Exception:
+        print('error: something went wrong in request_details_and_start_game()'
+              )
 
-def card_deck_clicked(card_path, title, card_deck_turtles, quit_btn):
+def card_deck_clicked(card_path, title, card_deck_turtles, quit_btn, info_txt):
     """card_deck_clicked: triggered when a card deck is clicked.
 
     Args:
@@ -309,18 +326,23 @@ def card_deck_clicked(card_path, title, card_deck_turtles, quit_btn):
                                button
     """
     
-    menu_screen_utils.load_card_deck_to_memory(card_path=card_path)
-    title.hideturtle()
-    title.clear()
-    quit_btn.hideturtle()
-    [card.turtle.hideturtle() for card in card_deck_turtles]
-    process_is_success = request_details_and_start_game()
-    
-    if not process_is_success:
-        load_card_selection_menu()
+    try:
+        menu_screen_utils.load_card_deck_to_memory(card_path=card_path)
+        title.hideturtle()
+        title.clear()
+        info_txt.hideturtle()
+        info_txt.clear()
+        quit_btn.hideturtle()
+        [card.turtle.hideturtle() for card in card_deck_turtles]
+        process_is_success = request_details_and_start_game()
+        
+        if not process_is_success:
+            load_card_selection_menu()
+    except Exception:
+        print('error: something went wrong in card_deck_clicked()')
         
 def load_card_decks(card_decks, card_deck_instances, screen, quit_button,
-                    game_splash):
+                    info_text, game_splash):
     """load_card_decks: loads the card decks in the card deck selection menu 
     screen. Onclick of a card deck, card_deck_clicked function is called.
 
@@ -332,84 +354,98 @@ def load_card_decks(card_decks, card_deck_instances, screen, quit_button,
         game_splash (_type_): _description_
     """
     
-    for key, value in card_decks.items():
-        screen.register_shape(value)
-        card_deck_instances.append(Card(index=key+4, name=value, card_back
-                                        =value))
-        
-        if key == list(card_decks.keys())[-1]:
-            quit_button.showturtle()
-        card_deck_instances[key].turtle.onclick(
-            lambda x , y, card_path = value, title = game_splash, 
-            card_deck_turtles = card_deck_instances, quit_btn = quit_button :\
-                card_deck_clicked(
-                card_path, title, card_deck_turtles, quit_btn))
+    try:
+        for key, value in card_decks.items():
+            screen.register_shape(value)
+            card_deck_instances.append(Card(index=key+4, name=value, card_back
+                                            =value))
+            
+            if key == list(card_decks.keys())[-1]:
+                quit_button.showturtle()
+            card_deck_instances[key].turtle.onclick(
+                lambda x , y, card_path = value, title = game_splash, 
+                card_deck_turtles = card_deck_instances, quit_btn = \
+                    quit_button, info_txt = info_text : card_deck_clicked(
+                    card_path, title, card_deck_turtles, quit_btn, info_txt))
+    except Exception:
+        print('error: something went wrong in load_card_decks()')
          
 def load_card_selection_menu():
     """load_card_selection_menu: loads the card deck selection menu 
     screen which displays the card decks for the user or the player to choose
     """
     
-    screen = turtle.Screen()
-    card_decks = menu_screen_utils.load_menu_screen_data()
-    if card_decks:
-        game_splash = draw_utils.load_start_button(is_small=True)
-        draw_utils.get_game_title(game_splash, is_small=True)
-        game_splash.showturtle()
-        card_deck_instances = []
-        quit_button = draw_utils.load_quit_button()
-        quit_button.hideturtle()
-        start_btn = draw_utils.load_start_button()
-        def handle_quit_button(x,y):
-            """handle_quit_button: handles on click event of auick button
-            """
-            
-            game_splash.hideturtle()
-            game_splash.clear()
+    try:
+        screen = turtle.Screen()
+        card_decks = menu_screen_utils.load_menu_screen_data()
+        if card_decks:
+            game_splash = draw_utils.load_start_button(is_small=True)
+            draw_utils.get_game_title(game_splash, is_small=True)
+            game_splash.showturtle()
+            info_text = draw_utils.customize_turtle_text(
+                'Pick a card deck', 10, (-250, 125), font = 'Century Gothic')
+            card_deck_instances = []
+            quit_button = draw_utils.load_quit_button()
             quit_button.hideturtle()
-            [card.turtle.hideturtle() for card in card_deck_instances]
-            time.sleep(0.5)
-            draw_utils.get_game_title(start_btn)
-            start_btn.showturtle()
-        
-        def handle_start_button(x,y):
-            """handle_start_button: handles on click event of start button
-            """
+            start_btn = draw_utils.load_start_button()
+            def handle_quit_button(x,y):
+                """handle_quit_button: handles on click event of auick button
+                """
+                
+                game_splash.hideturtle()
+                game_splash.clear()
+                info_text.hideturtle()
+                info_text.clear()
+                quit_button.hideturtle()
+                [card.turtle.hideturtle() for card in card_deck_instances]
+                time.sleep(0.5)
+                draw_utils.get_game_title(start_btn)
+                start_btn.showturtle()
             
-            start_btn.hideturtle()
-            start_btn.clear()
-            load_card_selection_menu()
-            
-        start_btn.onclick(handle_start_button)    
-        quit_button.onclick(handle_quit_button)  
-        load_card_decks(card_decks, card_deck_instances, screen, quit_button,
-                        game_splash)
+            def handle_start_button(x,y):
+                """handle_start_button: handles on click event of start button
+                """
+                
+                start_btn.hideturtle()
+                start_btn.clear()
+                load_card_selection_menu()
+                
+            start_btn.onclick(handle_start_button)    
+            quit_button.onclick(handle_quit_button)  
+            load_card_decks(card_decks, card_deck_instances, screen, 
+                            quit_button, info_text, game_splash)
+    except Exception:
+        print('error: something went wrong in load_card_selection_menu()')
        
 def main():
     """Initiates the gameplay, generates the base game elements. loads the
     card deck selection menu screen on click of the start_btn
     """
     
-    screen = turtle.Screen()
-    draw_utils.draw_outlines()
-    data_management_utils.register_assets(screen, ['quitbutton.gif', \
-        'card_back.gif', 'winner.gif', 'quitmsg.gif', 'card_warning.gif', \
-            'leaderboard_error.gif', 'file_error.gif'])
-    start_btn = draw_utils.load_start_button()
-    draw_utils.get_game_title(start_btn)
-    draw_utils.load_quit_button()
-    start_btn.showturtle()
-    
-    def handle_start_button(x,y):
-        """handle_start_button: handles on click event of start button
-        """
-            
-        start_btn.hideturtle()
-        start_btn.clear()
-        load_card_selection_menu()
+    try:
+        screen = turtle.Screen()
+        draw_utils.draw_outlines()
+        draw_utils.load_developer_signature()
+        data_management_utils.register_assets(screen, ['quitbutton.gif', \
+            'card_back.gif', 'winner.gif', 'quitmsg.gif', 'card_warning.gif', \
+                'leaderboard_error.gif', 'file_error.gif'])
+        start_btn = draw_utils.load_start_button()
+        draw_utils.get_game_title(start_btn)
+        draw_utils.load_quit_button()
+        start_btn.showturtle()
+        
+        def handle_start_button(x,y):
+            """handle_start_button: handles on click event of start button
+            """
+                
+            start_btn.hideturtle()
+            start_btn.clear()
+            load_card_selection_menu()
 
-    start_btn.onclick(handle_start_button)
-    screen.mainloop()
+        start_btn.onclick(handle_start_button)
+        screen.mainloop()
+    except Exception:
+        print('error: something went wrong in main()')
 
 if __name__ == '__main__':
     main()

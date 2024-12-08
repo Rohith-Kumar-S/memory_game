@@ -31,11 +31,11 @@ class Card:
                                        'card_back.gif')  if not card_back else\
                                            card_back)
         if index < 4:
-            self.turtle.setposition(-200 + 100*index, 200)
+            self.turtle.setposition(-207 + 105 * index, 200)
         elif index >= 4 and index < 8:
-            self.turtle.setposition(-600 + 100*index, 45)
+            self.turtle.setposition(-627 + 105 * index, 45)
         else:
-            self.turtle.setposition(-1000 + 100*index, -110)
+            self.turtle.setposition(-1047 + 105 * index, -110)
         self.name = name
 
        

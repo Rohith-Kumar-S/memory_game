@@ -9,7 +9,7 @@ After this, the user can quit the game, which triggers another popup confirming 
 
 This game has 3 screens:
 	* The title screen: with the game splash art/ title with the play button
-	* The card decks selection screen, allows the user to pick a card from the available card decks in the assets folder
+	* (Bonus part: screen)The card decks selection screen, allows the user to pick a card from the available card decks in the assets folder
 	* The gameplay screen: has the loaded cards, the scoreboard and the action details which are guesses and matches.
 	
 Folder structure:
@@ -28,6 +28,10 @@ The user can quit the game at any time during gameplay and start a new game.
 The user can also quit the card deck selection screen at any time and return to the title screen.
 On the gameplay screen, the user is allowed to pick only 2 cards at a time; the game will not allow the player to select 3 cards simultaneously.
 Each screen features a separate quit button with a turtle design.
+The score board is in the format of score name guesses, and it is ranked based on the score
+
+Bonus part:
+There are a total of 8 different card decks to choose from for the player.
 
 The game follows the follwoing sequence: 
 	* Generates the ui elements with turtle
@@ -37,12 +41,15 @@ The game follows the follwoing sequence:
 	* Creates a dicitonary with one card from each card deck as the value.
 	* This dicitonary will be used to populate the card deck menu screen.
 	* A new quit button will be loaded, which on click will move to the title screen.
-	* On click of the card deck, the path of the cards in the card deck will be stored in the memory.cfg file
+	
+	Bonus part:
+	* On click of the card deck, the path of the cards in the card deck will be stored in the memory.cfg file, if the memory file doesn't exists it will be created.
+	
 	* The user's name and card count will be noted and stored
 	* Based on the card count the cards will be drawn from the memory file.
 	* Data will be read from leaderboard.txt file and populated on the scoreboard.
 	* Onclick of a card the card will be flipped to reveal whats behind it. 
 	* On click of 2 cards a comparison will be made and if its a right choice both the card will be hidden or else they will be reseted back to the back side of the card.
-	* If the rightchoices made == the nimber of unique cards then the game will end and respective popups will be displayed.
+	* If the rightchoices made == the number of unique cards then the game will end and respective popups will be displayed.
 	* scoreboard will be updated and the leaderboard.txt file will be updated.
 	

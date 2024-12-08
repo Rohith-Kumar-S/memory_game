@@ -23,11 +23,10 @@ def get_leaderboard_details(players_dict):
         with open(os.path.join('config', 'leaderboard.txt'), mode= 'r') as f:
             f.readline()
             for player_detail in f:
-                player_detail = player_detail.strip()
                 player_name = player_detail.split()[0]
                 player_score = player_detail.split()[1]
                 player_clicks = player_detail.split()[2]
-                players_dict[player_name] = {"score":player_score, 
+                players_dict[player_name] = {"score":int(player_score), 
                                                         "clicks" : int(
                                                             player_clicks)}
     except FileNotFoundError:
@@ -35,7 +34,10 @@ def get_leaderboard_details(players_dict):
         error_message.showturtle()
         time.sleep(3)
         error_message.hideturtle()
-        print('get_leaderboard_details: leaderboard.txt was not found!')
+        print('error: get_leaderboard_details: leaderboard.txt was not found!')
+    except IndexError:
+        print('error:\
+get_leaderboard_details: leaderboard.txt has a blank line!')
         
 def save_leaderboard_details(players_dict):
     """save_leaderboard_details: persists the updates players scores to a file
@@ -109,3 +111,20 @@ def register_assets(screen, assets, is_full_path = False):
         else:
             screen.register_shape(os.path.join(os.path.join(os.getcwd(), 
                                                             'assets'), asset))
+            
+def sort_based_on_score(players_dict):
+    """sort_based_on_score: sorts the players based on score, in descending
+    order
+
+    Args:
+        players_dict (_type_): dicitonary with players details
+
+    Returns:
+        _type_: dicitonary with players details
+    """
+    
+    scores_sorted = sorted(
+    players_dict.items(), key=lambda item: item[1]['score'])
+    scores_sorted.reverse()
+    players_dict = dict(scores_sorted)
+    return players_dict
