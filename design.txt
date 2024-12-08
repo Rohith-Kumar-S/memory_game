@@ -1,0 +1,48 @@
+Memory game:
+This game is designed to emulate a game console, but with a touch screen and a quit button. When the play button is clicked, all available card decks are loaded, and the user is prompted to select one to start gameplay. Once a card deck is selected, the user is asked to enter their name and specify the number of cards to play with, which must be between 8 and 12 inclusively.
+
+The game then loads the selected card deck, along with details of previous players' scores, if available. It also initializes the guesses and matches, which will be updated based on the user's actions during gameplay.
+
+The user can then begin playing the game. As the user makes choices, the guesses and matches are updated accordingly. Once the player successfully completes all the correct matches, a popup appears, announcing the player's victory, and the scoreboard is updated based on the results.
+
+After this, the user can quit the game, which triggers another popup confirming the game is ending. The game then transitions back to the title screen, allowing the user to start a new game if desired.
+
+This game has 3 screens:
+	* The title screen: with the game splash art/ title with the play button
+	* The card decks selection screen, allows the user to pick a card from the available card decks in the assets folder
+	* The gameplay screen: has the loaded cards, the scoreboard and the action details which are guesses and matches.
+	
+Folder structure:
+memory_game
+	--assets: has all the ingame assets
+	--game_utils: has all the helper functions for the game
+	--config: has the generated leaderboard.txt file and memory.cfg file
+		leaderboard.txt: has the details of the previous players and their performances. Will be written/updated during the end of the game.
+		memory.cfg: has the paths of the cards which will be used on the gameplay screen. Will be created if not present based on the card deck chosen.
+	--model: has the Card class which is a customized turtle with the shape of a card.
+	--memory_game.py: the main file for the game, which handles the game
+	--TestGameUtils.py: A PyUnint test class for a class to test the game utils
+
+Quirks:
+The user can quit the game at any time during gameplay and start a new game.
+The user can also quit the card deck selection screen at any time and return to the title screen.
+On the gameplay screen, the user is allowed to pick only 2 cards at a time; the game will not allow the player to select 3 cards simultaneously.
+Each screen features a separate quit button with a turtle design.
+
+The game follows the follwoing sequence: 
+	* Generates the ui elements with turtle
+	* Loads up the game title/ splash art with a play button, and a quit button which wont do anything for this screen.
+	* On click on the play button the game performs various checks.
+	* It check if there are assets in the assets folder, and it checks if the given asset folder has valid .gif formatted files
+	* Creates a dicitonary with one card from each card deck as the value.
+	* This dicitonary will be used to populate the card deck menu screen.
+	* A new quit button will be loaded, which on click will move to the title screen.
+	* On click of the card deck, the path of the cards in the card deck will be stored in the memory.cfg file
+	* The user's name and card count will be noted and stored
+	* Based on the card count the cards will be drawn from the memory file.
+	* Data will be read from leaderboard.txt file and populated on the scoreboard.
+	* Onclick of a card the card will be flipped to reveal whats behind it. 
+	* On click of 2 cards a comparison will be made and if its a right choice both the card will be hidden or else they will be reseted back to the back side of the card.
+	* If the rightchoices made == the nimber of unique cards then the game will end and respective popups will be displayed.
+	* scoreboard will be updated and the leaderboard.txt file will be updated.
+	
