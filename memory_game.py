@@ -49,8 +49,8 @@ def end_game(cards, card_handler_dict, players_dict, score_turtles, end_popup):
         draw_utils.load_score_board(players_dict, score_turtles)
         data_management_utils.save_leaderboard_details(players_dict)
         end_popup.showturtle()
-    except Exception:
-        print('error: something went wrong in process_card_actions()')  
+    except Exception as e:
+        print('error: something went wrong in process_card_actions():', str(e))  
     
 def process_card_actions(cards, active_card_index, current_card_index, 
                          card_handler_dict, action_turtles, column_value):
@@ -84,8 +84,8 @@ def process_card_actions(cards, active_card_index, current_card_index,
         card_handler_dict['active_card_index'] = None
         draw_utils.load_player_action_details(
             card_handler_dict, action_turtles, column_value)  
-    except Exception:
-        print('error: something went wrong in process_card_actions()')  
+    except Exception as e:
+        print('error: something went wrong in process_card_actions()', str(e))  
 
 def card_clicked(card_handler_dict, players_dict, current_card_index, 
                    score_turtles, action_turtles, column_value, end_popup):
@@ -127,8 +127,8 @@ def card_clicked(card_handler_dict, players_dict, current_card_index,
         if card_handler_dict['right_choices'] == len(cards)//2:
             end_game(cards, card_handler_dict, players_dict, score_turtles, 
                     end_popup)
-    except Exception:
-        print('error: something went wrong in card_clicked()')
+    except Exception as e:
+        print('error: something went wrong in card_clicked()', str(e))
         
 def draw_and_play_cards(cards_list, card_handler_dict, players_dict, 
                         score_turtles, action_turtles, column_value, 
@@ -155,8 +155,8 @@ def draw_and_play_cards(cards_list, card_handler_dict, players_dict,
                 lambda x , y, turtle_index = i : card_clicked(
                     card_handler_dict, players_dict, turtle_index, 
                     score_turtles, action_turtles, column_value, end_popup))
-    except Exception:
-        print('error: something went wrong in draw_and_play_cards()')
+    except Exception as e:
+        print('error: something went wrong in draw_and_play_cards()', str(e))
 
 def handle_in_game_quit_button(end_popup, quit_message, quit_button, 
                                score_turtles, action_turtles, start_btn, 
@@ -193,8 +193,9 @@ def handle_in_game_quit_button(end_popup, quit_message, quit_button,
         draw_utils.get_game_title(start_btn)
         start_btn.showturtle()
         card_handler_dict = card_utils.initialize_card_handler()
-    except Exception:
-        print('error: something went wrong in handle_in_game_quit_button()')
+    except Exception as e:
+        print('error: something went wrong in handle_in_game_quit_button()', 
+              str(e))
 
 def start_game(cards_list, players_dict, score_turtles, column_value):
     """start_game: starts the game after a card deck was chosen and after the 
@@ -239,8 +240,8 @@ def start_game(cards_list, players_dict, score_turtles, column_value):
             
         start_btn.onclick(handle_start_button)    
         quit_button.onclick(handle_quit_button)
-    except Exception:
-        print('error: something went wrong in start_game()')
+    except Exception as e:
+        print('error: something went wrong in start_game()', str(e))
     
 def process_cards_and_start_game(cards_list, cards_count, player_name):
     """process_cards_and_start_game: Performs checks on the card count entered 
@@ -274,9 +275,9 @@ def process_cards_and_start_game(cards_list, cards_count, player_name):
             cards_count = 0
             
         return cards_count
-    except Exception:
+    except Exception as e:
         print('error: something went wrong in process_cards_and_start_game()'
-              )
+              , str(e))
     
 def request_details_and_start_game():
     """request_details_and_start_game: Requests the player's details and starts
@@ -310,9 +311,9 @@ Enter # of cards to play (8, 10, 12)")
                 cards_count = process_cards_and_start_game(cards_list, cards_count,
                                                         player_name)
         return True
-    except Exception:
+    except Exception as e:
         print('error: something went wrong in request_details_and_start_game()'
-              )
+              , str(e))
 
 def card_deck_clicked(card_path, title, card_deck_turtles, quit_btn, info_txt):
     """card_deck_clicked: triggered when a card deck is clicked.
@@ -338,8 +339,8 @@ def card_deck_clicked(card_path, title, card_deck_turtles, quit_btn, info_txt):
         
         if not process_is_success:
             load_card_selection_menu()
-    except Exception:
-        print('error: something went wrong in card_deck_clicked()')
+    except Exception as e:
+        print('error: something went wrong in card_deck_clicked()', str(e))
         
 def load_card_decks(card_decks, card_deck_instances, screen, quit_button,
                     info_text, game_splash):
@@ -367,8 +368,8 @@ def load_card_decks(card_decks, card_deck_instances, screen, quit_button,
                 card_deck_turtles = card_deck_instances, quit_btn = \
                     quit_button, info_txt = info_text : card_deck_clicked(
                     card_path, title, card_deck_turtles, quit_btn, info_txt))
-    except Exception:
-        print('error: something went wrong in load_card_decks()')
+    except Exception as e:
+        print('error: something went wrong in load_card_decks()', str(e))
          
 def load_card_selection_menu():
     """load_card_selection_menu: loads the card deck selection menu 
@@ -414,8 +415,9 @@ def load_card_selection_menu():
             quit_button.onclick(handle_quit_button)  
             load_card_decks(card_decks, card_deck_instances, screen, 
                             quit_button, info_text, game_splash)
-    except Exception:
-        print('error: something went wrong in load_card_selection_menu()')
+    except Exception as e:
+        print('error: something went wrong in load_card_selection_menu()', 
+              str(e))
        
 def main():
     """Initiates the gameplay, generates the base game elements. loads the
@@ -444,8 +446,8 @@ def main():
 
         start_btn.onclick(handle_start_button)
         screen.mainloop()
-    except Exception:
-        print('error: something went wrong in main()')
+    except Exception as e:
+        print('error: something went wrong in main()', str(e))
 
 if __name__ == '__main__':
     main()
